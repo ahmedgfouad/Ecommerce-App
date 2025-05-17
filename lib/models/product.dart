@@ -14,10 +14,34 @@ class Product {
     required this.title,
     required this.price,
     required this.imageUrl,
-    this.discountValue =0,
+    this.discountValue = 0,
     this.category = "Other",
     this.rate,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'price': price,
+      'imageUrl': imageUrl,
+      'discountValue': discountValue,
+      'category': category,
+      'rate': rate,
+    };
+  }
+
+  factory Product.fromMap(Map<String, dynamic> map, String documentId) {
+    return Product(
+      id: documentId,
+      title: map["title"] as String,
+      price: map["price"] as int,
+      imageUrl: map["imageUrl"] as String,
+      discountValue: map["discountValue"] as int,
+      category: map["category"] as String,
+      rate: map["rate"] as double,
+    );
+  }
 }
 
 List<Product> dummyProducts = [
@@ -66,7 +90,7 @@ List<Product> dummyProducts = [
     title: "T-Shirt",
     price: 300,
     imageUrl: AppAssets.tempProductAsset1,
-    category: "Clothes", 
+    category: "Clothes",
   ),
   Product(
     id: "1",

@@ -2,7 +2,6 @@
 
 import 'package:ecommerce/controller/auth_controller.dart';
 import 'package:ecommerce/utils/enum.dart';
-import 'package:ecommerce/utils/routes.dart';
 import 'package:ecommerce/views/widgets/main_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,8 +29,8 @@ class _AuthPageState extends State<AuthPage> {
 
   Future<void> _submit(AuthController model) async {
     try {
-      await model.submit(); 
-      Navigator.of(context).pushNamed(AppRoutes.bottomNavBarRoute);
+      await model.submit();
+      // Navigator.of(context).pushNamed(AppRoutes.bottomNavBarRoute);
     } catch (e) {
       showDialog(
         context: context,
@@ -140,7 +139,7 @@ class _AuthPageState extends State<AuthPage> {
                           },
                         ),
                         const SizedBox(height: 10.0),
-    
+
                         Align(
                           alignment: Alignment.center,
                           child: InkWell(
@@ -165,7 +164,7 @@ class _AuthPageState extends State<AuthPage> {
                           ),
                         ),
                         const SizedBox(height: 10.0),
-    
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

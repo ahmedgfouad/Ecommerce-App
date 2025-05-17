@@ -1,4 +1,5 @@
 import 'package:ecommerce/views/pages/home_page.dart';
+import 'package:ecommerce/views/pages/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
@@ -10,7 +11,6 @@ class BottomNavBarPage extends StatefulWidget {
 }
 
 class _BottomNavBarPageState extends State<BottomNavBarPage> {
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +42,7 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
             ),
           ),
           PersistentTabConfig(
-            screen: Container(),
+            screen: ProfilePage(),
             item: ItemConfig(icon: Icon(Icons.person), title: "Profile"),
           ),
         ],
