@@ -1,7 +1,9 @@
+import 'package:ecommerce/controller/database_controller.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/utils/assets.dart';
 import 'package:ecommerce/views/widgets/list_item_home.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,6 +11,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final database = Provider.of<Database>(context);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -57,39 +60,61 @@ class HomePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
-                  height: 300,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children:
-                        dummyProducts
-                            .map(
-                              (e) => Padding(
+                  height: 240,
+                  child: StreamBuilder<List<Product>>(
+                    stream: database.salesProductsStream(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        final products = snapshot.data;
+                        if (products == null || products.isEmpty) {
+                          return const Center(
+                            child: Text("No Data Available!!"),
+                          );
+                        }
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: products.length,
+                          itemBuilder:
+                              (context, index) => Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: ListItemHome(product: e),
+                                child: ListItemHome(product: products[index]),
                               ),
-                            )
-                            .toList(),
+                        );
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    },
                   ),
                 ),
                 BuildHeaderOfList(
-                  title: "Sale",
+                  title: "New",
                   description: "Super Summer Sale",
                   onTap: null,
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
                   height: 300,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children:
-                        dummyProducts
-                            .map(
-                              (e) => Padding(
+                  child: StreamBuilder<List<Product>>(
+                    stream: database.newProductsStream(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        final products = snapshot.data;
+                        if (products == null || products.isEmpty) {
+                          return const Center(
+                            child: Text("No Data Available!!"),
+                          );
+                        }
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: products.length,
+                          itemBuilder:
+                              (context, index) => Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: ListItemHome(product: e),
+                                child: ListItemHome(product: products[index]),
                               ),
-                            )
-                            .toList(),
+                        );
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    },
                   ),
                 ),
               ],

@@ -1,15 +1,29 @@
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/firestore_services.dart';
+import 'package:ecommerce/utils/api_path.dart';
 
 abstract class Database {
-  Stream<List<Product>> productsStream();
+  Stream<List<Product>> salesProductsStream();
+  Stream<List<Product>> newProductsStream();
 }
 
 class FirestoreDatabase implements Database {
+  final String uid;
   final _service = FirestoreServices.instance;
+  FirestoreDatabase(this.uid);
   @override
-  Stream<List<Product>> productsStream() => _service.collectionsStram(
-    path: "products/",
+  Stream<List<Product>> salesProductsStream() => _service.collectionsStram(
+    path: ApiPath.products(),
+    builder: (data, documentId) => Product.fromMap(data!, documentId),
+    queryBuilder: (query) => query.where('discountValue', isNotEqualTo: 0),
+  );
+
+  @override
+  Stream<List<Product>> newProductsStream() => _service.collectionsStram(
+    path: ApiPath.products(),
     builder: (data, documentId) => Product.fromMap(data!, documentId),
   );
+
+  Future<void> setProduct(Product product) async =>
+      _service.setData(path: "products/${product.id}", data: product.toMap());
 }

@@ -21,15 +21,15 @@ class ListItemHome extends StatelessWidget {
                   child: Image.network(
                     product.imageUrl,
                     fit: BoxFit.cover,
-                    width: 200,
-                    height: 200,
+                    width: 150,
+                    height: 150,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
-                    width: 50,
-                    height: 30,
+                    width: 30,
+                    height: 20,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
@@ -40,7 +40,7 @@ class ListItemHome extends StatelessWidget {
                           '${product.discountValue}%',
                           style: Theme.of(
                             context,
-                          ).textTheme.bodyMedium!.copyWith(color: Colors.white),
+                          ).textTheme.bodySmall!.copyWith(color: Colors.white),
                         ),
                       ),
                     ),
@@ -48,7 +48,7 @@ class ListItemHome extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 5),
             Text(
               product.category,
               style: Theme.of(
