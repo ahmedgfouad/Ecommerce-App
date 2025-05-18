@@ -1,3 +1,4 @@
+import 'package:ecommerce/models/add_to_cart_model.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/models/user_data.dart';
 import 'package:ecommerce/services/firestore_services.dart';
@@ -8,6 +9,7 @@ abstract class Database {
   Stream<List<Product>> newProductsStream();
 
   Future<void> setUserData(UserData userData);
+  Future<void> addToCart(AddToCartModel product);
 }
 
 class FirestoreDatabase implements Database {
@@ -31,6 +33,15 @@ class FirestoreDatabase implements Database {
       _service.setData(path: "products/${product.id}", data: product.toMap());
 
   @override
-  Future<void> setUserData(UserData userData) async=>
-     await _service.setData(path: ApiPath.user(userData.uid), data: userData.toMap());
+  Future<void> setUserData(UserData userData) async => await _service.setData(
+    path: ApiPath.user(userData.uid),
+    data: userData.toMap(),
+  );
+
+  @override
+  Future<void> addToCart(AddToCartModel product) async =>
+      await _service.setData(
+        path: ApiPath.addToCartId(uid, product.id),
+        data: product.toMap(),
+      );
 }

@@ -1,7 +1,9 @@
+import 'package:ecommerce/controller/database_controller.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 
 class ListItemHome extends StatefulWidget {
   const ListItemHome({super.key, required this.product});
@@ -17,12 +19,18 @@ class _ListItemHomeState extends State<ListItemHome> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+        final database = Provider.of<Database>(context);
+
+
     return InkWell(
       onTap:
           () => Navigator.of(
             context,
             rootNavigator: true,
-          ).pushNamed(AppRoutes.productDetailsRoute, arguments: widget.product),
+          ).pushNamed(AppRoutes.productDetailsRoute, arguments: { 
+            'product' : widget.product,
+            'database': database,
+          }),
       child: SizedBox(
         child: DecoratedBox(
           decoration: BoxDecoration(),

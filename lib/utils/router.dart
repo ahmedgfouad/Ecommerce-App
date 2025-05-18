@@ -1,10 +1,11 @@
-import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/controller/database_controller.dart';
 import 'package:ecommerce/utils/routes.dart';
 import 'package:ecommerce/views/pages/bottom_nav_bar.dart';
 import 'package:ecommerce/views/pages/landing_page.dart';
 import 'package:ecommerce/views/pages/auth_page.dart';
 import 'package:ecommerce/views/pages/product_details.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 Route<dynamic> onGenerate(RouteSettings setting) {
   switch (setting.name) {
@@ -25,9 +26,15 @@ Route<dynamic> onGenerate(RouteSettings setting) {
         settings: setting,
       );
     case AppRoutes.productDetailsRoute:
-      final product = setting.arguments as Product;
+      final args = setting.arguments as Map<String, dynamic>;
+      final product =args ['product'];
+      final database =args ['database'];
       return MaterialPageRoute(
-        builder: (_) => ProductDetails(product: product),
+        builder:
+            (_) => Provider<Database>.value(
+              value:  database,
+              child: ProductDetails(product: product),
+            ),
         settings: setting,
       );
 

@@ -3,6 +3,7 @@
 import 'package:ecommerce/controller/auth_controller.dart';
 import 'package:ecommerce/utils/enum.dart';
 import 'package:ecommerce/views/widgets/main_button.dart';
+import 'package:ecommerce/views/widgets/main_show_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,28 +33,7 @@ class _AuthPageState extends State<AuthPage> {
       await model.submit();
       // Navigator.of(context).pushNamed(AppRoutes.bottomNavBarRoute);
     } catch (e) {
-      showDialog(
-        context: context,
-        builder:
-            (context) => AlertDialog(
-              title: Text(
-                "Error !",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              content: Text(
-                e.toString(),
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("Ok"),
-                ),
-              ],
-            ),
-      );
+      mainShowdialog(context: context, e: e);
     }
   }
 
@@ -199,3 +179,4 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 }
+

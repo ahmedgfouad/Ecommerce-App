@@ -1,7 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:ecommerce/controller/database_controller.dart';
+import 'package:ecommerce/models/add_to_cart_model.dart';
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/utils/constant.dart';
 import 'package:ecommerce/views/widgets/drop_down_menue.dart';
 import 'package:ecommerce/views/widgets/main_button.dart';
+import 'package:ecommerce/views/widgets/main_show_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;
@@ -14,9 +21,27 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   bool isFavorite = false;
   late String dropdownValue;
+  Future<void> _addToCart(Database database) async {
+    try {
+      final addToCartProduct = AddToCartModel(
+        id: documentIdFromLocalData(),
+        title: widget.product.title,
+        price: widget.product.price,
+        imageUrl: widget.product.imageUrl,
+        size: dropdownValue,
+        productId: widget.product.id,
+      );
+      await database.addToCart(addToCartProduct);
+    } catch (e) {
+      mainShowdialog(e: e, context: context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final database = Provider.of<Database>(context);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -122,7 +147,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   SizedBox(height: 10),
                   MainButton(
                     text: "Add To Cart",
-                    onTap: () {},
+                    onTap:()=> _addToCart(database),
                     hasCirclarBorder: true,
                   ),
                 ],
