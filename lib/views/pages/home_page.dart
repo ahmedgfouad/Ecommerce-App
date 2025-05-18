@@ -60,7 +60,7 @@ class HomePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
-                  height: 240,
+                  height: 260,
                   child: StreamBuilder<List<Product>>(
                     stream: database.salesProductsStream(),
                     builder: (context, snapshot) {
@@ -92,7 +92,7 @@ class HomePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
-                  height: 300,
+                  height: 260,
                   child: StreamBuilder<List<Product>>(
                     stream: database.newProductsStream(),
                     builder: (context, snapshot) {
@@ -117,6 +117,7 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                 ),
+                SizedBox(height: 60),
               ],
             ),
           ),

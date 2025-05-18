@@ -18,13 +18,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider<AuthBase>(
-      create: (_)=>Auth(),
+      create: (_) => Auth(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Ecommerce App',
         theme: ThemeData(
           scaffoldBackgroundColor: Color(0xffE5E5E5),
           primaryColor: Colors.red,
+          appBarTheme: AppBarTheme(elevation: 2),
           inputDecorationTheme: InputDecorationTheme(
             labelStyle: Theme.of(context).textTheme.labelMedium,
             focusedBorder: OutlineInputBorder(
