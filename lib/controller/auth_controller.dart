@@ -1,4 +1,7 @@
+import 'package:ecommerce/controller/database_controller.dart';
+import 'package:ecommerce/models/user_data.dart';
 import 'package:ecommerce/services/auth.dart';
+import 'package:ecommerce/utils/constant.dart';
 import 'package:ecommerce/utils/enum.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +10,7 @@ class AuthController with ChangeNotifier {
   String email;
   String password;
   AuthFormType authFormType;
+  final Database database = FirestoreDatabase('123');
 
   AuthController({
     required this.auth,
@@ -22,6 +26,9 @@ class AuthController with ChangeNotifier {
         await auth.lgoinWithEmailAndPassword(email, password);
       } else {
         await auth.signUpWithEmailAndPassword(email, password);
+        await database.setUserData(
+          UserData(uid: documentIdFromLocalData(), email: email),
+        );
       }
     } catch (e) {
       rethrow;
