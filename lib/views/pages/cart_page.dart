@@ -25,11 +25,11 @@ class _CartPageState extends State<CartPage> {
           context,
           listen: false,
         ).myProductsCart().first;
-    myProducts.forEach((element) {
+    for (var element in myProducts) {
       setState(() {
         totalAmount += element.price;
       });
-    });
+    }
   }
 
   @override

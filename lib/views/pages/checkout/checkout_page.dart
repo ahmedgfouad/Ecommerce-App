@@ -1,5 +1,7 @@
 import 'package:ecommerce/controller/database_controller.dart';
 import 'package:ecommerce/models/delivery_method.dart';
+import 'package:ecommerce/models/shipping_addressl.dart';
+import 'package:ecommerce/utils/routes.dart';
 import 'package:ecommerce/views/widgets/checkout/checkout_order_details.dart';
 import 'package:ecommerce/views/widgets/checkout/delivary_method_item.dart';
 import 'package:ecommerce/views/widgets/checkout/paymetn_component.dart';
@@ -28,7 +30,40 @@ class CheckoutPage extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 6),
-              const ShippingAddressComponent(),
+              StreamBuilder<List<ShippingAddress>>(
+                stream: database.getShaippingAddress(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    final shippingAddresses = snapshot.data;
+                    if (shippingAddresses == null ||
+                        shippingAddresses.isEmpty) {
+                      return Center(
+                        child: Column(
+                          children: [
+                            Text("No shipping addresses!!"),
+                            const SizedBox(height: 4),
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                  AppRoutes.addShippingAddresRoute,
+                                  arguments: database,
+                                );
+                              },
+                              child: Text(
+                                'Add new one',
+                                style: Theme.of(context).textTheme.labelLarge!
+                                    .copyWith(color: Colors.redAccent),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return ShippingAddressComponent();
+                  }
+                  return Center(child: CircularProgressIndicator.adaptive());
+                },
+              ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
