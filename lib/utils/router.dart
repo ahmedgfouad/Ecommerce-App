@@ -1,6 +1,7 @@
 import 'package:ecommerce/controller/database_controller.dart';
 import 'package:ecommerce/utils/routes.dart';
 import 'package:ecommerce/views/pages/bottom_nav_bar.dart';
+import 'package:ecommerce/views/pages/checkout/checkout_page.dart';
 import 'package:ecommerce/views/pages/landing_page.dart';
 import 'package:ecommerce/views/pages/auth_page.dart';
 import 'package:ecommerce/views/pages/product_details.dart';
@@ -27,17 +28,27 @@ Route<dynamic> onGenerate(RouteSettings setting) {
       );
     case AppRoutes.productDetailsRoute:
       final args = setting.arguments as Map<String, dynamic>;
-      final product =args ['product'];
-      final database =args ['database'];
+      final product = args['product'];
+      final database = args['database'];
       return MaterialPageRoute(
         builder:
             (_) => Provider<Database>.value(
-              value:  database,
+              value: database,
               child: ProductDetails(product: product),
             ),
         settings: setting,
       );
 
+    case AppRoutes.checkoutRoute:
+      final database = setting.arguments as Database;
+      return MaterialPageRoute(
+        builder:
+            (_) => Provider<Database>.value(
+              value: database,
+              child: const CheckoutPage(),
+            ),
+        settings: setting,
+      );
     default:
       return MaterialPageRoute(
         builder: (_) => const LandingPage(),

@@ -18,13 +18,6 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
       body: PersistentTabView(
         tabs: [
           PersistentTabConfig(
-            screen: CartPage(),
-            item: ItemConfig(
-              icon: Icon(Icons.shopping_cart_outlined),
-              title: "Cart",
-            ),
-          ),
-          PersistentTabConfig(
             screen: HomePage(),
             item: ItemConfig(icon: Icon(Icons.home), title: "Home"),
           ),
@@ -33,6 +26,13 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
             item: ItemConfig(
               icon: Icon(Icons.shopping_bag_outlined),
               title: "Shop",
+            ),
+          ),
+          PersistentTabConfig(
+            screen: CartPage(),
+            item: ItemConfig(
+              icon: Icon(Icons.shopping_cart_outlined),
+              title: "Cart",
             ),
           ),
 
