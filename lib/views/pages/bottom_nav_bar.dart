@@ -1,3 +1,4 @@
+import 'package:ecommerce/views/pages/cart_page.dart';
 import 'package:ecommerce/views/pages/home_page.dart';
 import 'package:ecommerce/views/pages/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,13 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
       body: PersistentTabView(
         tabs: [
           PersistentTabConfig(
+            screen: CartPage(),
+            item: ItemConfig(
+              icon: Icon(Icons.shopping_cart_outlined),
+              title: "Cart",
+            ),
+          ),
+          PersistentTabConfig(
             screen: HomePage(),
             item: ItemConfig(icon: Icon(Icons.home), title: "Home"),
           ),
@@ -27,13 +35,7 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
               title: "Shop",
             ),
           ),
-          PersistentTabConfig(
-            screen: Container(),
-            item: ItemConfig(
-              icon: Icon(Icons.shopping_cart_outlined),
-              title: "Cart",
-            ),
-          ),
+
           PersistentTabConfig(
             screen: Container(),
             item: ItemConfig(

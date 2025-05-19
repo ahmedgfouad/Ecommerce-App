@@ -7,6 +7,7 @@ import 'package:ecommerce/utils/api_path.dart';
 abstract class Database {
   Stream<List<Product>> salesProductsStream();
   Stream<List<Product>> newProductsStream();
+  Stream<List<AddToCartModel>> myProductsCart();
 
   Future<void> setUserData(UserData userData);
   Future<void> addToCart(AddToCartModel product);
@@ -44,4 +45,11 @@ class FirestoreDatabase implements Database {
         path: ApiPath.addToCartId(uid, product.id),
         data: product.toMap(),
       );
+
+  @override
+  Stream<List<AddToCartModel>> myProductsCart() => _service.collectionsStram(
+    path: ApiPath.myProductsCart(uid),
+    builder: (data, documentId) => 
+    AddToCartModel.fromMap(data!, documentId),
+  );
 }
