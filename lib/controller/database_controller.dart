@@ -14,6 +14,7 @@ abstract class Database {
 
   Future<void> setUserData(UserData userData);
   Future<void> addToCart(AddToCartModel product);
+  Future<void> saveAddress(ShippingAddress shippingAddress);
   Stream<List<ShippingAddress>> getShaippingAddress();
 }
 
@@ -71,4 +72,10 @@ class FirestoreDatabase implements Database {
         builder:
             (data, documentId) => ShippingAddress.fromMap(data!, documentId),
       );
+
+  @override
+  Future<void> saveAddress(ShippingAddress address) => _service.setData(
+    path: ApiPath.newAddress(uid, address.id),
+    data: address.toMap(),
+  );
 }
