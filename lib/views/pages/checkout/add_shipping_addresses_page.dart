@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddShippingAddressesPage extends StatefulWidget {
-  const AddShippingAddressesPage({super.key});
+  final ShippingAddress? shippingAddress;
+  const AddShippingAddressesPage({super.key, this.shippingAddress});
 
   @override
   State<AddShippingAddressesPage> createState() =>
@@ -22,6 +23,22 @@ class _AddShippingAddressesPageState extends State<AddShippingAddressesPage> {
   final _stateController = TextEditingController();
   final _zipCodeController = TextEditingController();
   final _countryController = TextEditingController();
+
+  ShippingAddress? shippingAddress;
+  @override
+  void initState() {
+    super.initState();
+    shippingAddress = widget.shippingAddress;
+    if (shippingAddress != null) {
+      _fullNameController.text = shippingAddress!.fullName;
+      _addressController.text = shippingAddress!.address;
+      _cityController.text = shippingAddress!.city;
+      _stateController.text = shippingAddress!.state;
+      _zipCodeController.text = shippingAddress!.zipCode;
+      _countryController.text = shippingAddress!.country;
+    }
+  }
+
   @override
   void dispose() {
     _fullNameController.dispose();
@@ -37,7 +54,10 @@ class _AddShippingAddressesPageState extends State<AddShippingAddressesPage> {
     try {
       if (_formKey.currentState!.validate()) {
         final address = ShippingAddress(
-          id: documentIdFromLocalData(),
+          id:
+              shippingAddress != null
+                  ? shippingAddress!.id
+                  : documentIdFromLocalData(),
           fullName: _fullNameController.text.trim(),
           country: _countryController.text.trim(),
           address: _addressController.text.trim(),
@@ -46,7 +66,7 @@ class _AddShippingAddressesPageState extends State<AddShippingAddressesPage> {
           zipCode: _zipCodeController.text.trim(),
         );
         await database.saveAddress(address);
-        if (!mounted) return; 
+        if (!mounted) return;
         Navigator.of(context).pop();
       }
     } catch (e) {
@@ -58,7 +78,14 @@ class _AddShippingAddressesPageState extends State<AddShippingAddressesPage> {
   Widget build(BuildContext context) {
     final database = Provider.of<Database>(context);
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text("Adding Shipping Address")),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          shippingAddress != null
+              ? "Editing Shipping Address"
+              : "Adding Shipping Address",
+        ),
+      ),
 
       body: SingleChildScrollView(
         child: Form(
@@ -82,7 +109,9 @@ class _AddShippingAddressesPageState extends State<AddShippingAddressesPage> {
                 TextFormField(
                   validator:
                       (value) =>
-                          value!.isNotEmpty ? null : "pleade enter your name",
+                          value!.isNotEmpty
+                              ? null
+                              : "pleade enter your address",
                   controller: _addressController,
                   decoration: const InputDecoration(
                     label: Text("Address"),
@@ -94,7 +123,7 @@ class _AddShippingAddressesPageState extends State<AddShippingAddressesPage> {
                 TextFormField(
                   validator:
                       (value) =>
-                          value!.isNotEmpty ? null : "pleade enter your name",
+                          value!.isNotEmpty ? null : "pleade enter your city",
                   controller: _cityController,
                   decoration: const InputDecoration(
                     label: Text("City"),
@@ -106,7 +135,7 @@ class _AddShippingAddressesPageState extends State<AddShippingAddressesPage> {
                 TextFormField(
                   validator:
                       (value) =>
-                          value!.isNotEmpty ? null : "pleade enter your name",
+                          value!.isNotEmpty ? null : "pleade enter your state",
                   controller: _stateController,
                   decoration: const InputDecoration(
                     label: Text("State / province"),
@@ -118,7 +147,9 @@ class _AddShippingAddressesPageState extends State<AddShippingAddressesPage> {
                 TextFormField(
                   validator:
                       (value) =>
-                          value!.isNotEmpty ? null : "pleade enter your name",
+                          value!.isNotEmpty
+                              ? null
+                              : "pleade enter your zip code",
                   controller: _zipCodeController,
                   decoration: const InputDecoration(
                     label: Text("Zip Code"),
@@ -130,7 +161,9 @@ class _AddShippingAddressesPageState extends State<AddShippingAddressesPage> {
                 TextFormField(
                   validator:
                       (value) =>
-                          value!.isNotEmpty ? null : "pleade enter your name",
+                          value!.isNotEmpty
+                              ? null
+                              : "pleade enter your country",
                   controller: _countryController,
                   decoration: const InputDecoration(
                     label: Text("Contry"),

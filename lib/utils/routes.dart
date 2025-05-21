@@ -2,7 +2,8 @@ class AppRoutes {
   static const String landingPageRoute = '/';
   static const String authPageRoute = '/auth';
   static const String bottomNavBarRoute = '/navbar';
-  static const String productDetailsRoute = '/productDetails';
+  static const String productDetailsRoute = '/product_details';
   static const String checkoutRoute = '/checkout';
-  static const String addShippingAddresRoute = '/addShippingAddres';
+  static const String shippingAddresRoute = '/checkout/shipping_addresses';
+  static const String addShippingAddresRoute = '/checkout/add_shipping_address';
 }

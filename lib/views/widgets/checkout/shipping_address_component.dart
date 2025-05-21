@@ -1,5 +1,8 @@
+import 'package:ecommerce/controller/database_controller.dart';
 import 'package:ecommerce/models/shipping_addressl.dart';
+import 'package:ecommerce/utils/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ShippingAddressComponent extends StatelessWidget {
   const ShippingAddressComponent({super.key, required this.shippingAddress});
@@ -7,6 +10,7 @@ class ShippingAddressComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final database = Provider.of<Database>(context);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
@@ -22,7 +26,11 @@ class ShippingAddressComponent extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap:
+                      () => Navigator.of(context).pushNamed(
+                        AppRoutes.shippingAddresRoute,
+                        arguments: database,
+                      ),
                   child: Text(
                     "Change",
                     style: Theme.of(

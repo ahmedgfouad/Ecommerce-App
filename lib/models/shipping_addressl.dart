@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 
 class ShippingAddress {
   final String id;
@@ -47,4 +48,26 @@ class ShippingAddress {
   }
 
 
+
+  ShippingAddress copyWith({
+    String? id,
+    String? fullName,
+    String? country,
+    String? address,
+    String? city,
+    String? state,
+    String? zipCode,
+    bool? isDefault,
+  }) {
+    return ShippingAddress(
+      id: id ?? this.id,
+      fullName: fullName ?? this.fullName,
+      country: country ?? this.country,
+      address: address ?? this.address,
+      city: city ?? this.city,
+      state: state ?? this.state,
+      zipCode: zipCode ?? this.zipCode,
+      isDefault: isDefault ?? this.isDefault,
+    );
+  }
 }
