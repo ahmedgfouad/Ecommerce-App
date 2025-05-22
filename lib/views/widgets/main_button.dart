@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
 class MainButton extends StatelessWidget {
-  const MainButton({
+  MainButton({
     super.key,
-    required this.text,
-    required this.onTap,
+    this.text,
+    this.onTap,
     this.hasCirclarBorder = false,
-  });
-  final String text;
-  final VoidCallback onTap;
+    this.child,
+  }) {
+    assert(text != null || child != null);
+  }
+  final String? text;
+  final VoidCallback? onTap;
   final bool hasCirclarBorder;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +24,7 @@ class MainButton extends StatelessWidget {
         onPressed: onTap,
 
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColor, 
+          backgroundColor: Theme.of(context).primaryColor,
           shape:
               hasCirclarBorder
                   ? RoundedRectangleBorder(
@@ -30,12 +34,15 @@ class MainButton extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5),
                   ),
         ),
-        child: Text(
-          text,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyLarge!.copyWith(color: Colors.white),
-        ),
+        child:
+            text != null
+                ? Text(
+                  text!,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge!.copyWith(color: Colors.white),
+                )
+                : child,
       ),
     );
   }

@@ -1,5 +1,9 @@
+import 'package:ecommerce/controller/checkout/checkout_cubit.dart';
+import 'package:ecommerce/models/payment_method.dart';
+import 'package:ecommerce/utils/constant.dart';
 import 'package:ecommerce/views/widgets/main_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddNewCardBottomShet extends StatefulWidget {
   const AddNewCardBottomShet({super.key});
@@ -27,6 +31,7 @@ class _AddNewCardBottomShetState extends State<AddNewCardBottomShet> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final checkoutCubit = BlocProvider.of<CheckoutCubit>(context);
     return SizedBox(
       height: size.height * 2,
       child: Form(
@@ -118,12 +123,50 @@ class _AddNewCardBottomShetState extends State<AddNewCardBottomShet> {
                 ),
               ),
               const SizedBox(height: 30),
-              MainButton(
-                text: "Add Card",
-                onTap: () {
-                  if (_formKey.currentState!.validate()) {}
+              BlocConsumer<CheckoutCubit, CheckoutState>(
+                bloc: checkoutCubit,
+                listenWhen:
+                    (previous, current) =>
+                        current is CardsAdded || current is CardsAddingfailed,
+                listener: (context, state) {
+                  if (state is CardsAdded) {
+                    Navigator.of(context).pop();
+                  } else if (state is CardsAddingfailed) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.error)));
+                  }
                 },
-                hasCirclarBorder: true,
+                buildWhen:
+                    (previous, current) =>
+                        current is AddingCards ||
+                        current is CardsAdded ||
+                        current is CardsAddingfailed,
+                builder: (context, state) {
+                  if (state is AddingCards) {
+                    return MainButton(
+                      onTap: null,
+                      child: const CircularProgressIndicator.adaptive(),
+                    );
+                  }
+
+                  return MainButton(
+                    text: "Add Card",
+                    onTap: () async {
+                      if (_formKey.currentState!.validate()) {
+                        final paymentMethod = PaymentMethod(
+                          id: documentIdFromLocalData(),
+                          name: _nameOnCardController.text,
+                          cardNumber: _cardNumberController.text,
+                          expiryDate: _expireDateController.text,
+                          cvv: _cvvController.text,
+                        );
+                        await checkoutCubit.addCard(paymentMethod);
+                      }
+                    },
+                    hasCirclarBorder: true,
+                  );
+                },
               ),
             ],
           ),
