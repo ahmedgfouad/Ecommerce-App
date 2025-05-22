@@ -18,8 +18,9 @@ class MainButton extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
         onPressed: onTap,
+
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).primaryColor, 
           shape:
               hasCirclarBorder
                   ? RoundedRectangleBorder(

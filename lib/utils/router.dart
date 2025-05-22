@@ -4,6 +4,7 @@ import 'package:ecommerce/utils/routes.dart';
 import 'package:ecommerce/views/pages/bottom_nav_bar.dart';
 import 'package:ecommerce/views/pages/checkout/add_shipping_addresses_page.dart';
 import 'package:ecommerce/views/pages/checkout/checkout_page.dart';
+import 'package:ecommerce/views/pages/checkout/payment_methods_page.dart';
 import 'package:ecommerce/views/pages/checkout/shipping_addresses_page.dart';
 import 'package:ecommerce/views/pages/landing_page.dart';
 import 'package:ecommerce/views/pages/auth_page.dart';
@@ -74,6 +75,11 @@ Route<dynamic> onGenerate(RouteSettings setting) {
             ),
         settings: setting,
       );
+    case AppRoutes.paymentMethodsRoute:
+      return MaterialPageRoute(
+        builder: (_) => const PaymentMethodsPage(),
+        settings: setting,
+      ); 
     default:
       return MaterialPageRoute(
         builder: (_) => const LandingPage(),
