@@ -25,12 +25,25 @@ final class CardsFetchingingfailed extends CheckoutState {
   CardsFetchingingfailed(this.error);
 }
 
+final class DeletingCards extends CheckoutState {
+  final String paymentId;
 
-final class DeletingCards extends CheckoutState {}
+  DeletingCards(this.paymentId);
+}
 
 final class CardsDeleted extends CheckoutState {}
 
 final class CardsDeletingfailed extends CheckoutState {
   final String error;
   CardsDeletingfailed(this.error);
+}
+
+final class MakingPreferred extends CheckoutState {}
+
+final class PreferredMade extends CheckoutState {}
+
+final class PreferredMakingFailed extends CheckoutState {
+  final String error;
+
+  PreferredMakingFailed(this.error);
 }

@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddNewCardBottomShet extends StatefulWidget {
-  const AddNewCardBottomShet({super.key});
+  const AddNewCardBottomShet({super.key, this.paymentMethod});
+  final PaymentMethod? paymentMethod;
 
   @override
   State<AddNewCardBottomShet> createState() => _AddNewCardBottomShetState();
@@ -26,6 +27,13 @@ class _AddNewCardBottomShetState extends State<AddNewCardBottomShet> {
     _cardNumberController = TextEditingController();
     _expireDateController = TextEditingController();
     _cvvController = TextEditingController();
+
+    if (widget.paymentMethod != null) {
+      _nameOnCardController.text = widget.paymentMethod!.name;
+      _cardNumberController.text = widget.paymentMethod!.cardNumber;
+      _expireDateController.text = widget.paymentMethod!.expiryDate;
+      _cvvController.text = widget.paymentMethod!.cvv;
+    }
   }
 
   @override
@@ -151,11 +159,15 @@ class _AddNewCardBottomShetState extends State<AddNewCardBottomShet> {
                   }
 
                   return MainButton(
-                    text: "Add Card",
+                    text:
+                        widget.paymentMethod != null ? "Edit Card" : "Add Card",
                     onTap: () async {
                       if (_formKey.currentState!.validate()) {
                         final paymentMethod = PaymentMethod(
-                          id: documentIdFromLocalData(),
+                          id:
+                              widget.paymentMethod != null
+                                  ? widget.paymentMethod!.id
+                                  : documentIdFromLocalData(),
                           name: _nameOnCardController.text,
                           cardNumber: _cardNumberController.text,
                           expiryDate: _expireDateController.text,

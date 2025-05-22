@@ -4,7 +4,7 @@ import 'package:ecommerce/services/firestore_services.dart';
 import 'package:ecommerce/utils/api_path.dart';
 
 abstract class CheckoutServices {
-  Future<void> addPaymentMethod(PaymentMethod paymentMethod);
+  Future<void> setPaymentMethod(PaymentMethod paymentMethod);
   Future<void> deletePaymentMethod(PaymentMethod paymentMethod);
   Future<List<PaymentMethod>> paymentMethods();
 }
@@ -14,7 +14,7 @@ class CheckoutServicesImp implements CheckoutServices {
   final authServices = Auth();
 
   @override
-  Future<void> addPaymentMethod(PaymentMethod paymentMethod) async {
+  Future<void> setPaymentMethod(PaymentMethod paymentMethod) async {
     final currentUser = authServices.currentUser;
     await firestoreServices.setData(
       path: ApiPath.addCard(currentUser!.uid, paymentMethod.id),
@@ -31,12 +31,18 @@ class CheckoutServicesImp implements CheckoutServices {
   }
 
   @override
-  Future<List<PaymentMethod>> paymentMethods() async {
+  Future<List<PaymentMethod>> paymentMethods([
+    bool fetchPreferred = false,
+  ]) async {
     final currentUser = authServices.currentUser;
 
     return await firestoreServices.getCollection(
       path: ApiPath.cards(currentUser!.uid),
       builder: (data, documentId) => PaymentMethod.fromMap(data),
+      queryBuilder:
+          fetchPreferred == true
+              ? (query) => query.where('isPreferred', isEqualTo: true)
+              : null,
     );
   }
 }

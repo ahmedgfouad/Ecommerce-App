@@ -1,4 +1,5 @@
 import 'package:ecommerce/controller/checkout/checkout_cubit.dart';
+import 'package:ecommerce/models/payment_method.dart';
 import 'package:ecommerce/views/widgets/checkout/add_new_card_bottom_shet.dart';
 import 'package:ecommerce/views/widgets/main_button.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +11,36 @@ class PaymentMethodsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final checkoutCubit = BlocProvider.of<CheckoutCubit>(context);
+
+    Future<void> showBottomShet({PaymentMethod? paymentMethod}) async {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (_) {
+          return BlocProvider.value(
+            value: checkoutCubit,
+            child: AddNewCardBottomShet(paymentMethod: paymentMethod),
+          );
+        },
+      ).then((value) => checkoutCubit.fetchCards());
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text("Payment Methods"), centerTitle: true),
-      body: BlocBuilder<CheckoutCubit, CheckoutState>(
+      body: BlocConsumer<CheckoutCubit, CheckoutState>(
         bloc: checkoutCubit,
+        listenWhen:
+            (previous, current) =>
+                current is PreferredMade || current is PreferredMakingFailed,
+        listener: (context, state) {
+          if (state is PreferredMade) {
+            Navigator.of(context).pop();
+          } else if (state is PreferredMakingFailed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.error), backgroundColor: Colors.red),
+            );
+          }
+        },
         buildWhen:
             (previous, current) =>
                 current is FetchingCards ||
@@ -48,33 +75,63 @@ class PaymentMethodsPage extends StatelessWidget {
                         final paymentmethod = paymentMethods[index];
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 4.0),
-                          child: Card(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Row(
+                          child: InkWell(
+                            onTap: () async {
+                              await checkoutCubit.makePreferred(paymentmethod);
+                            },
+                            child: Card(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.credit_card),
+                                        SizedBox(width: 10),
+                                        Text(paymentmethod.cardNumber),
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
                                     children: [
-                                      Icon(Icons.credit_card),
-                                      SizedBox(width: 10),
-                                      Text(paymentmethod.cardNumber),
+                                      IconButton(
+                                        onPressed: () {
+                                          showBottomShet(
+                                            paymentMethod: paymentmethod,
+                                          );
+                                        },
+                                        icon: const Icon(Icons.edit),
+                                      ),
+                                      BlocBuilder<CheckoutCubit, CheckoutState>(
+                                        bloc: CheckoutCubit(),
+                                        buildWhen:
+                                            (previous, current) =>
+                                                (current is DeletingCards &&
+                                                    current.paymentId ==
+                                                        paymentmethod.id) ||
+                                                current is CardsDeleted ||
+                                                current is CardsDeletingfailed,
+
+                                        builder: (context, state) {
+                                          if (state is DeletingCards) {
+                                            return const CircularProgressIndicator.adaptive();
+                                          }
+                                          return IconButton(
+                                            onPressed: () async {
+                                              await checkoutCubit.deleteCard(
+                                                paymentmethod,
+                                              );
+                                            },
+                                            icon: const Icon(Icons.delete),
+                                          );
+                                        },
+                                      ),
                                     ],
                                   ),
-                                ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.edit),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.delete),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -85,16 +142,7 @@ class PaymentMethodsPage extends StatelessWidget {
                     MainButton(
                       hasCirclarBorder: true,
                       onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (_) {
-                            return BlocProvider.value(
-                              value: checkoutCubit,
-                              child: AddNewCardBottomShet(),
-                            );
-                          },
-                        ).then((value) => checkoutCubit.fetchCards());
+                        showBottomShet();
                       },
                       text: "Add New Card",
                     ),
